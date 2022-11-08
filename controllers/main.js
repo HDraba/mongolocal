@@ -1,8 +1,9 @@
-
 exports.getMain = (req, res, next) => {
-    console.log('Hello Main')
-    res.render('main.ejs', {
-        page: {title: 'Main'},
-        path: '/main'
-    })
-}
+  console.log('Hello Main');
+  res.render('main.ejs', {
+    page: { title: 'Main' },
+    path: '/main',
+    isLoggedIn: req.isLoggedIn,
+
+  });
+};

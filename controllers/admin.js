@@ -9,6 +9,7 @@ exports.getShop = (req, res, next) => {
       page: { title: 'Shop' },
       path: '/admin-shop',
       products: products,
+      isLoggedIn: req.isLoggedIn,
     });
   });
 };
@@ -18,6 +19,7 @@ exports.getAddProduct = (req, res, next) => {
   res.render('add-product', {
     page: { title: 'Add Product' },
     path: '/add-product',
+    isLoggedIn: req.isLoggedIn,
   });
 };
 
@@ -36,7 +38,7 @@ exports.postAddProducts = (req, res, next) => {
   product
     .save()
     .then((data) => {
-    //   console.log('Stuff ', data);
+      //   console.log('Stuff ', data);
       res.redirect('/shop');
     })
     .catch((err) => console.log(err));
@@ -50,6 +52,7 @@ exports.getEditProduct = (req, res, next) => {
         product: product,
         page: { title: 'Edit Product' },
         path: '/admin-shop',
+        isLoggedIn: req.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
