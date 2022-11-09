@@ -15,6 +15,9 @@ exports.getShop = (req, res, next) => {
 };
 
 exports.getAddProduct = (req, res, next) => {
+  if (!req.session.isLoggedIn) {
+    return res.redirect('/login')
+  }
   console.log('getaddprod');
   res.render('add-product', {
     page: { title: 'Add Product' },
