@@ -9,7 +9,7 @@ exports.getShop = (req, res, next) => {
       page: { title: 'Shop' },
       path: '/admin-shop',
       products: products,
-      isLoggedIn: req.session.isLoggedIn,
+      isLoggedIn: req.session.isLoggedIn, 
     });
   });
 };
@@ -22,7 +22,7 @@ exports.getAddProduct = (req, res, next) => {
   res.render('add-product', {
     page: { title: 'Add Product' },
     path: '/add-product',
-    isLoggedIn: req.isLoggedIn,
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
 
