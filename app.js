@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session)
-// const csrf = require('csurf')
+const csrf = require('csurf')
 
 const mainRoutes = require('./routes/main');
 const shopRoutes = require('./routes/shop');
@@ -19,7 +19,7 @@ const store = new MongoDBStore({
   collection: 'sessions'
 })
 
-// const csrfProtection = csrf()
+const csrfProtection = csrf()
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -34,6 +34,8 @@ app.use(
     store: store
   })
 );
+app.use(csrfProtection)
+
 
 // re-added old approach due to a lack of model-functions while only fetching data from the db 
 app.use((req, res, next) => {
@@ -50,6 +52,13 @@ app.use((req, res, next) => {
   .catch((err) => {
     console.log(err);
   });
+})
+
+app.use((req, res, next) => {
+  // locals = sent to every view that's rendered
+  res.locals.isLoggedIn = req.session.isLoggedIn
+  res.locals.csrfToken = req.csrfToken()
+  next()
 })
 
 app.use('/main', mainRoutes);
