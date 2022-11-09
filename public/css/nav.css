@@ -57,10 +57,29 @@ form {
 
 .main-header__item {
   margin: 0 1rem;
-  padding: 0;
 }
 
-.main-header__item a {
+.main-header__item a,
+.main-header__item button {
+  padding: 2px;
+  font: inherit;
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+.main-header__item a:hover,
+.main-header__item a:active,
+.main-header__item a.active,
+.main-header__item button:hover,
+.main-header__item button:active {
+  color: #bada55;
+  border: dotted 1px #bada55;
+}
+
+/* .main-header__item a {
   text-decoration: none;
   color: white;
 }
@@ -69,6 +88,4 @@ form {
 .main-header__item a:active,
 .main-header__item a.active {
   color: #bada55;
-padding: 2px;
-  border: dotted 1px #bada55;
-}
+} */
