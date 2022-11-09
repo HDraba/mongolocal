@@ -32,6 +32,7 @@ app.use(
   })
 );
 
+// re-added old approach due to a lack of model-functions while only fetching data from the db 
 app.use((req, res, next) => {
   if (!req.session.user) {
     // returning so nothing after will be executed
