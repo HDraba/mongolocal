@@ -33,7 +33,7 @@ exports.getDetailsOfProduct = (req, res, next) => {
 exports.getCart = async (req, res, next) => {
   // more like fetching the products of the cart
   const populateCart = async () => {
-    return await req.session.user.populate('cart.items.productId');
+    return await req.user.populate('cart.items.productId');
   };
   await populateCart()
     .then((user) => {
@@ -53,7 +53,7 @@ exports.postCart = (req, res, next) => {
   const productId = req.body.productId;
   Product.findById(productId).then((product) => {
     // console.log(product)
-    return req.session.user
+    return req.user
       .addToCart(product)
       .then(() => {
         res.redirect('/shop/cart');
@@ -64,7 +64,7 @@ exports.postCart = (req, res, next) => {
 
 exports.removeItemFromCart = (req, res, next) => {
   const productId = req.body.productId;
-  req.session.user
+  req.user
     .removeFromCartById(productId)
     .then(res.redirect('/shop/cart'))
     .catch((err) => {
@@ -74,7 +74,7 @@ exports.removeItemFromCart = (req, res, next) => {
 
 exports.postOrder = async (req, res, next) => {
   const populateCart = async () => {
-    return await req.session.user.populate('cart.items.productId');
+    return await req.user.populate('cart.items.productId');
   };
   await populateCart()
     .then((user) => {
@@ -83,13 +83,13 @@ exports.postOrder = async (req, res, next) => {
       });
       const order = new Order({
         user: {
-          name: req.session.user.name,
-          userId: req.session.user,
+          name: req.user.name,
+          userId: req.user,
         },
         products: products,
       });
       order.save();
-      req.session.user.clearCart();
+      req.user.clearCart();
     })
     .then(() => {
       res.redirect('/shop/orders');
@@ -98,7 +98,7 @@ exports.postOrder = async (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  Order.find({ 'user.uaerId': req.session.user._id }).then((orders) => {
+  Order.find({ 'user.uaerId': req.user._id }).then((orders) => {
     res.render('orders.ejs', {
       path: '/orders',
       page: { title: 'Your Orders' },

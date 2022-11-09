@@ -32,6 +32,22 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    // returning so nothing after will be executed
+    return next()
+  }
+  // gives a user stored in the session
+  User.findById(req.session.user._id)
+  .then((user) => {
+    req.user = user
+    next()
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+})
+
 app.use('/main', mainRoutes);
 app.use('/shop', shopRoutes);
 app.use('/admin', adminRoutes);
