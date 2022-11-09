@@ -3,7 +3,6 @@ exports.getMain = (req, res, next) => {
   res.render('main.ejs', {
     page: { title: 'Main' },
     path: '/main',
-    isLoggedIn: req.isLoggedIn,
-
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
