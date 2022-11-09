@@ -57,18 +57,18 @@ app.use(authRoutes);
 mongoose
   .connect('mongodb://localhost:27017/shop')
   .then(() => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: 'Hannes',
-          email: 'test@test.com',
-          cart: {
-            item: [],
-          },
-        });
-        user.save();
-      }
-    });
+    // User.findOne().then((user) => {
+    //   if (!user) {
+    //     const user = new User({
+    //       name: 'Hannes',
+    //       email: 'test@test.com',
+    //       cart: {
+    //         item: [],
+    //       },
+    //     });
+    //     user.save();
+    //   }
+    // });
     app.listen(3000);
   })
   .catch((err) => console.log(err));
