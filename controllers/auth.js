@@ -150,20 +150,43 @@ exports.postReset = (req, res, next) => {
           req.flash('error', 'No account with that email found');
           return res.redirect('/reset');
         }
-        user.resetToken = token
-        user.resetTokenExpiraton = Date.now() + 3600000 // 1h in ms 
-        return user.save() // updating user in database
-      }).then(result => {
-        res.redirect('/shop')
+        user.resetToken = token;
+        user.resetTokenExpiraton = Date.now() + 3600000; // 1h in ms
+        return user.save(); // updating user in database
+      })
+      .then((result) => {
+        res.redirect('/shop');
         // transporter.sendMail({
-            // to: req.body.email,
-            // from: 'shop@node-complete.com',
-            // subject: 'Password reset',
-            // html: `
-            // <p>You requested a password reset</p>
-            // <p>Click <a href="http://localhost:3000/reset/${token}">Here</a> to set a new password</p>
-            // `        
+        // to: req.body.email,
+        // from: 'shop@node-complete.com',
+        // subject: 'Password reset',
+        // html: `
+        // <p>You requested a password reset</p>
+        // <p>Click <a href="http://localhost:3000/reset/${token}">Here</a> to set a new password</p>
+        // `
       })
       .catch((err) => console.log(err));
   });
+};
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.token;
+  User.findOne({ resetToken: token, resetTokenExpiraton: { $gt: Date.now() } }) // special Operator: gt = greater than
+    .then((user) => {
+      let message = req.flash('error');
+      if (message.length > 0) {
+        message = message[0];
+      } else {
+        message = null;
+      }
+      res.render('new-password.ejs', {
+        path: '/new-password',
+        page: { title: 'new Password' },
+        errorMessage: message,
+        userId: user_id.toString(),
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
