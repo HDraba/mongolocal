@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Product = require('../models/product');
 
 exports.getShop = (req, res, next) => {
-  Product.find().then((products) => {
+  Product.find({ userId: req.user._id }).then((products) => {
     res.render('shop.ejs', {
       isAdmin: true,
       page: { title: 'Shop' },
@@ -15,7 +15,7 @@ exports.getShop = (req, res, next) => {
 
 exports.getAddProduct = (req, res, next) => {
   if (!req.session.isLoggedIn) {
-    return res.redirect('/login')
+    return res.redirect('/login');
   }
   console.log('getaddprod');
   res.render('add-product', {
@@ -35,7 +35,7 @@ exports.postAddProducts = (req, res, next) => {
     imageUrl: imageUrl,
     price: price,
     description: description,
-    userId: req.user
+    userId: req.user,
   });
   product
     .save()
@@ -67,21 +67,23 @@ exports.postEditProduct = (req, res, next) => {
   const updatedDescription = req.body.description;
   Product.findById(productId)
     .then((product) => {
+      if (product.user.toString() !== req.user._id.toString()) {
+        return res.redirect('/shop');
+      }
       product.title = updatedTitle;
       product.imageUrl = updatedImageUrl;
       product.price = updatedPrice;
       product.description = updatedDescription;
-      product.save();
-    })
-    .then(() => {
-      res.redirect('/admin/shop');
+      product.save().then(() => {
+        res.redirect('/admin/shop');
+      });
     })
     .catch((err) => console.log(err));
 };
 
 exports.deleteProduct = (req, res, next) => {
   const productId = req.body.productId;
-  Product.findByIdAndRemove(productId)
+  Product.deleteOne({_id: prodId, userId: req.user._id})
     .then(() => {
       res.redirect('/admin/shop');
     })
