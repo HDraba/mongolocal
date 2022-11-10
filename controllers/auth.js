@@ -5,25 +5,30 @@ const User = require('../models/user');
 
 exports.getLogin = (req, res, next) => {
   //   const isLoggedIn = req.get('Cookie').split('=')[1].trim();
-  console.log(req.session.isLoggedIn);
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render('auth.ejs', {
     path: '/login',
     page: { title: 'Login' },
     isLoggedIn: false,
-    errorMessage: req.flash('error')
+    errorMessage: message,
   });
 };
 
 exports.postLogin = (req, res, next) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    User.findOne({ email: email }).then((user) => {
-        if (!user) {
-            req.flash('error', 'invalid email or password')
-            return res.redirect('/login');
-        }
-        bcrypt
-        .compare(password, user.password)
+  const email = req.body.email;
+  const password = req.body.password;
+  User.findOne({ email: email }).then((user) => {
+    if (!user) {
+      req.flash('error', 'invalid email or password');
+      return res.redirect('/login');
+    }
+    bcrypt
+      .compare(password, user.password)
       .then((areMatching) => {
         if (areMatching) {
           req.session.isLoggedIn = true;
