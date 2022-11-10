@@ -81,9 +81,11 @@ exports.postOrder = async (req, res, next) => {
       const products = user.cart.items.map((i) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
+      console.log(req.user);
       const order = new Order({
         user: {
-          name: req.user.name,
+          username: req.user.username,
+          email: req.user.email,
           userId: req.user,
         },
         products: products,
