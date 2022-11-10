@@ -1,3 +1,6 @@
+//nodejs built-in
+const crypto = require('crypto');
+
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
@@ -130,5 +133,37 @@ exports.getReset = (req, res, next) => {
     path: '/reset',
     page: { title: 'Reset Password' },
     errorMessage: message,
+  });
+};
+
+exports.postReset = (req, res, next) => {
+  const email = req.body.email;
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('/reset');
+    }
+    const token = buffer.toString('hex');
+    User.findOne({ email: email })
+      .then((user) => {
+        if (!user) {
+          req.flash('error', 'No account with that email found');
+          return res.redirect('/reset');
+        }
+        user.resetToken = token
+        user.resetTokenExpiraton = Date.now() + 3600000 // 1h in ms 
+        return user.save() // updating user in database
+      }).then(result => {
+        res.redirect('/shop')
+        // transporter.sendMail({
+            // to: req.body.email,
+            // from: 'shop@node-complete.com',
+            // subject: 'Password reset',
+            // html: `
+            // <p>You requested a password reset</p>
+            // <p>Click <a href="http://localhost:3000/reset/${token}">Here</a> to set a new password</p>
+            // `        
+      })
+      .catch((err) => console.log(err));
   });
 };
