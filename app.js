@@ -1,3 +1,10 @@
+// terminal to start the local mongodb server 
+  // brew services start mongodb-community@6.0
+  // brew services stop mongodb-community@6.0
+// new terminal 
+  // mongosh 
+  // or mongocompass for: localhost:27017
+
 const path = require('path');
 
 const express = require('express');
