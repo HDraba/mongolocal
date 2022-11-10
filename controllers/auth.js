@@ -1,7 +1,15 @@
 const bcrypt = require('bcryptjs');
-const { rawListeners } = require('../models/user');
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const User = require('../models/user');
+
+// const transporter = nodemailer.createTransport(sendgridTransport({
+// auth: {
+//  // api_user:
+// api_key:
+// }
+// }))
 
 exports.getLogin = (req, res, next) => {
   //   const isLoggedIn = req.get('Cookie').split('=')[1].trim();
@@ -14,7 +22,7 @@ exports.getLogin = (req, res, next) => {
   res.render('auth.ejs', {
     path: '/login',
     page: { title: 'Login' },
-    isLoggedIn: false,
+    // isLoggedIn: false,
     errorMessage: message,
   });
 };
@@ -56,17 +64,17 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
-    let message = req.flash('error');
-    if (message.length > 0) {
-      message = message[0];
-    } else {
-      message = null;
-    }
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render('signup.ejs', {
     path: '/signup',
     page: { title: 'Signup' },
     isLoggedIn: false,
-    errorMessage: message
+    errorMessage: message,
   });
 };
 
@@ -96,10 +104,31 @@ exports.postSignup = (req, res, next) => {
         })
         .then((result) => {
           res.redirect('/login');
-        });
+          //   return transporter.sendMail({
+          // to: email,
+          // from: 'shop@node-complete.com',
+          // subject: 'Signup succeeded',
+          // html: '<h1>You successfully signed up!</h1>'
+        })
+        .catch((err) => console.log(err));
+      // });
     })
 
     .catch((err) => {
       console.log(err);
     });
+};
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render('reset.ejs', {
+    path: '/reset',
+    page: { title: 'Reset Password' },
+    errorMessage: message,
+  });
 };
