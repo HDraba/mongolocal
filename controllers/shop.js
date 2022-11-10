@@ -12,7 +12,6 @@ exports.getShop = (req, res, next) => {
       page: { title: 'Shop' },
       path: '/shop',
       products: products,
-      isLoggedIn: req.session.isLoggedIn,
     });
   });
   //   console.log('Hello Shop');
@@ -25,7 +24,6 @@ exports.getDetailsOfProduct = (req, res, next) => {
       product: product,
       page: { title: 'Product-Details' },
       path: '/shop',
-      isLoggedIn: req.session.isLoggedIn,
     });
   });
 };
@@ -43,7 +41,6 @@ exports.getCart = async (req, res, next) => {
         page: { title: 'Cart' },
         path: '/cart',
         products: products,
-        isLoggedIn: req.session.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
@@ -105,7 +102,6 @@ exports.getOrders = (req, res, next) => {
       path: '/orders',
       page: { title: 'Your Orders' },
       orders: orders,
-      isLoggedIn: req.session.isLoggedIn,
     });
   });
 };

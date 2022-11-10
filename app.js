@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
+const flash = require('connect-flash')
 
 const mainRoutes = require('./routes/main');
 const shopRoutes = require('./routes/shop');
@@ -34,8 +35,9 @@ app.use(
     store: store
   })
 );
-app.use(csrfProtection)
 
+app.use(csrfProtection)
+app.use(flash())
 
 // re-added old approach due to a lack of model-functions while only fetching data from the db 
 app.use((req, res, next) => {

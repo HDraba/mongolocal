@@ -38,6 +38,7 @@ form {
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 .main-header__nav {
